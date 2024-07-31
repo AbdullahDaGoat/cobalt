@@ -6,7 +6,7 @@ services:
     restart: unless-stopped
     container_name: cobalt-api
     init: true
-    tty: true
+    # tty: true
     ports:
       - 127.0.0.1:9000:9000
     environment:
