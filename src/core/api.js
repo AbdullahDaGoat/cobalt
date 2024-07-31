@@ -1,5 +1,4 @@
 import cors from "cors";
-import rateLimit from "express-rate-limit";
 import { setGlobalDispatcher, ProxyAgent } from "undici";
 
 import { env, version } from "../modules/config.js";
@@ -22,7 +21,7 @@ const ipSalt = generateSalt();
 const corsConfig = env.corsWildcard ? {} : {
     origin: env.corsURL,
     optionsSuccessStatus: 200
-}
+};
 
 export function runAPI(express, app, gitCommit, gitBranch, __dirname) {
     const startTime = new Date();
@@ -36,32 +35,7 @@ export function runAPI(express, app, gitCommit, gitBranch, __dirname) {
         url: env.apiURL,
         cors: Number(env.corsWildcard),
         startTime: `${startTimestamp}`
-    }
-
-    const apiLimiter = rateLimit({
-        windowMs: env.rateLimitWindow * 1000,
-        max: env.rateLimitMax,
-        standardHeaders: true,
-        legacyHeaders: false,
-        keyGenerator: req => generateHmac(getIP(req), ipSalt),
-        handler: (req, res) => {
-            return res.status(429).json({
-                "status": "rate-limit",
-                "text": loc(languageCode(req), 'ErrorRateLimit', env.rateLimitWindow)
-            });
-        }
-    })
-
-    const apiLimiterStream = rateLimit({
-        windowMs: env.rateLimitWindow * 1000,
-        max: env.rateLimitMax,
-        standardHeaders: true,
-        legacyHeaders: false,
-        keyGenerator: req => generateHmac(getIP(req), ipSalt),
-        handler: (req, res) => {
-            return res.sendStatus(429)
-        }
-    })
+    };
 
     app.set('trust proxy', ['loopback', 'uniquelocal']);
 
@@ -74,19 +48,20 @@ export function runAPI(express, app, gitCommit, gitBranch, __dirname) {
             'Ratelimit-Reset'
         ],
         ...corsConfig,
-    }))
+    }));
 
-    app.use('/api/json', apiLimiter);
-    app.use('/api/stream', apiLimiterStream);
+    // Remove the rate limiter middleware
+    // app.use('/api/json', apiLimiter);
+    // app.use('/api/stream', apiLimiterStream);
 
     app.use((req, res, next) => {
         try {
-            decodeURIComponent(req.path)
+            decodeURIComponent(req.path);
         } catch {
-            return res.redirect('/')
+            return res.redirect('/');
         }
         next();
-    })
+    });
 
     app.use('/api/json', express.json({ limit: 1024 }));
     app.use('/api/json', (err, _, res, next) => {
@@ -107,7 +82,7 @@ export function runAPI(express, app, gitCommit, gitBranch, __dirname) {
         const fail = (t) => {
             const { status, body } = createResponse("error", { t: loc(lang, t) });
             res.status(status).json(body);
-        }
+        };
 
         if (!acceptRegex.test(req.header('Accept'))) {
             return fail('ErrorInvalidAcceptHeader');
@@ -141,7 +116,7 @@ export function runAPI(express, app, gitCommit, gitBranch, __dirname) {
         } catch {
             fail('ErrorSomethingWentWrong');
         }
-    })
+    });
 
     app.get('/api/stream', (req, res) => {
         const id = String(req.query.id);
@@ -162,7 +137,7 @@ export function runAPI(express, app, gitCommit, gitBranch, __dirname) {
         if (req.query.p) {
             return res.status(200).json({
                 status: "continue"
-            })
+            });
         }
 
         const streamInfo = verifyStream(id, sig, exp, sec, iv);
@@ -170,7 +145,7 @@ export function runAPI(express, app, gitCommit, gitBranch, __dirname) {
             return res.sendStatus(streamInfo.status);
         }
         return stream(res, streamInfo);
-    })
+    });
 
     app.get('/api/istream', (req, res) => {
         if (!req.ip.endsWith('127.0.0.1')) {
@@ -192,29 +167,29 @@ export function runAPI(express, app, gitCommit, gitBranch, __dirname) {
         ]);
 
         return stream(res, { type: 'internal', ...streamInfo });
-    })
+    });
 
     app.get('/api/serverInfo', (_, res) => {
         return res.status(200).json(serverInfo);
-    })
+    });
 
     app.get('/favicon.ico', (req, res) => {
-        res.sendFile(`${__dirname}/src/front/icons/favicon.ico`)
-    })
+        res.sendFile(`${__dirname}/src/front/icons/favicon.ico`);
+    });
 
     app.get('/*', (req, res) => {
-        res.redirect('/api/serverInfo')
-    })
+        res.redirect('/api/serverInfo');
+    });
 
     randomizeCiphers();
     setInterval(randomizeCiphers, 1000 * 60 * 30); // shuffle ciphers every 30 minutes
 
     if (env.externalProxy) {
         if (env.freebindCIDR) {
-            throw new Error('Freebind is not available when external proxy is enabled')
+            throw new Error('Freebind is not available when external proxy is enabled');
         }
 
-        setGlobalDispatcher(new ProxyAgent(env.externalProxy))
+        setGlobalDispatcher(new ProxyAgent(env.externalProxy));
     }
 
     app.listen(env.apiPort, env.listenAddress, () => {
@@ -223,6 +198,6 @@ export function runAPI(express, app, gitCommit, gitBranch, __dirname) {
             `Start time: ${Bright(`${startTime.toUTCString()} (${startTimestamp})`)}\n\n` +
             `URL: ${Cyan(`${env.apiURL}`)}\n` +
             `Port: ${env.apiPort}\n`
-        )
-    })
+        );
+    });
 }
