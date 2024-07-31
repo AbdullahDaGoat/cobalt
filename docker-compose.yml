@@ -1,4 +1,4 @@
-version: '3.5'
+version: '3.7'
 
 services:
     cobalt-api:
@@ -9,51 +9,30 @@ services:
         init: true
 
         # if container doesn't run detached on your machine, uncomment the next line
-        #tty: true
+        tty: true
 
         ports:
-            - 9000:9000/tcp
+            #- 9000:9000/tcp
             # if you're using a reverse proxy, uncomment the next line and remove the one above (9000:9000/tcp):
-            #- 127.0.0.1:9000:9000
+            - 127.0.0.1:9000:9000
 
         environment:
             # replace https://api.cobalt.tools/ with your instance's target url in same format
-            API_URL: "https://api.cobalt.tools/"
+            API_URL: "https://api.xtractor.top/"
             # replace eu-nl with your instance's distinctive name
-            API_NAME: "eu-nl"
+            API_NAME: "xtractor"
             # if you want to use cookies when fetching data from services, uncomment the next line and the lines under volume
-            # COOKIE_PATH: "/cookies.json"
+            COOKIE_PATH: "/cookies.json"
             # see docs/run-an-instance.md for more information
+            # RATELIMIT_WINDOW: 280
+            # RATELIMIT_MAX: 120
+            # DURATION_LIMIT: 10800
         labels:
             - com.centurylinklabs.watchtower.scope=cobalt
 
         # if you want to use cookies when fetching data from services, uncomment volumes and next line
-        #volumes:
-            #- ./cookies.json:/cookies.json
-
-    cobalt-web:
-        image: ghcr.io/imputnet/cobalt:7
-        restart: unless-stopped
-        container_name: cobalt-web
-
-        init: true
-
-        # if container doesn't run detached on your machine, uncomment the next line
-        #tty: true
-
-        ports:
-            - 9001:9001/tcp
-            # if you're using a reverse proxy, uncomment the next line and remove the one above (9001:9001/tcp):
-            #- 127.0.0.1:9001:9001
-
-        environment:
-            # replace https://cobalt.tools/ with your instance's target url in same format
-            WEB_URL: "https://cobalt.tools/"
-            # replace https://api.cobalt.tools/ with preferred api instance url
-            API_URL: "https://api.cobalt.tools/"
-
-        labels:
-            - com.centurylinklabs.watchtower.scope=cobalt
+        volumes:
+            - ./cookies.json:/cookies.json
 
     # update the cobalt image automatically with watchtower
     watchtower:
