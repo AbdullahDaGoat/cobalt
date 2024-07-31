@@ -12,13 +12,13 @@ services:
         tty: true
 
         ports:
-            #- 9000:9000/tcp
+            - 9000:9000/tcp
             # if you're using a reverse proxy, uncomment the next line and remove the one above (9000:9000/tcp):
-            - 127.0.0.1:9000:9000
+            # - 127.0.0.1:9000:9000
 
         environment:
             # replace https://api.cobalt.tools/ with your instance's target url in same format
-            API_URL: "https://api.xtractor.top/"
+            API_URL: "https://cobalt-production-85f9.up.railway.app/"
             # replace eu-nl with your instance's distinctive name
             API_NAME: "xtractor"
             # if you want to use cookies when fetching data from services, uncomment the next line and the lines under volume
