@@ -32,4 +32,4 @@ jobs:
       - run: npm publish
       - run: npm login --scope=@abdullahdagoat --registry=https://npm.pkg.github.com
         env:
-          NODE_AUTH_TOKEN: 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
+          NODE_AUTH_TOKEN: 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
