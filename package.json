@@ -1,7 +1,7 @@
 {
     "name": "@abdullahdagoat/cobalt-adg",
     "description": "save what you love",
-    "version": "12.0.0",
+    "version": "14.0.0",
     "author": "imput",
     "url": "https://github.com/abdullahdagoat/cobalt",
     "exports": "./src/cobalt.js",
