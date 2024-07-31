@@ -10,6 +10,7 @@ node_modules
 
 # vscode
 .vscode
+.npmrc
 
 # cookie file
 cookies.json
