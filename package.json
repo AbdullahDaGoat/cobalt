@@ -1,7 +1,7 @@
 {
-    "name": "@abdullahdagoat/cobalt-adg",
+    "name": "@abdulladagoat/cobalt",
     "description": "save what you love",
-    "version": "17.0.0",
+    "version": "18.0.0",
     "author": "imput",
     "url": "https://github.com/abdullahdagoat/cobalt",
     "exports": "./src/cobalt.js",
@@ -49,5 +49,10 @@
     },
     "optionalDependencies": {
         "freebind": "^0.2.2"
-    }
+    },
+    "main": "index.js",
+    "directories": {
+        "doc": "docs"
+    },
+    "devDependencies": {}
 }
