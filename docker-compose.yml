@@ -22,7 +22,7 @@ services:
             # replace eu-nl with your instance's distinctive name
             API_NAME: "xtractor"
             # if you want to use cookies when fetching data from services, uncomment the next line and the lines under volume
-            COOKIE_PATH: "/cookies.json"
+            # COOKIE_PATH: "/cookies.json"
             # see docs/run-an-instance.md for more information
             # RATELIMIT_WINDOW: 280
             # RATELIMIT_MAX: 120
@@ -32,7 +32,7 @@ services:
 
         # if you want to use cookies when fetching data from services, uncomment volumes and next line
         volumes:
-            - ./cookies.json:/cookies.json
+            # - ./cookies.json:/cookies.json
 
     # update the cobalt image automatically with watchtower
     watchtower:
